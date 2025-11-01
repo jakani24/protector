@@ -2,6 +2,7 @@ use std::fs::{self, File};
 use std::io::Write;
 use std::path::Path;
 use std::process::Command;
+use std::os::unix::fs::PermissionsExt;
 
 fn main() {
     // Predefined values
@@ -15,8 +16,15 @@ fn main() {
     for folder in folders.iter() {
         if !Path::new(folder).exists() {
             match fs::create_dir_all(folder) {
-                Ok(_) => println!("Created folder: {}", folder),
-                Err(e) => eprintln!("Failed to create folder {}: {}", folder, e),
+                Ok(_) => { 
+			println!("Created folder: {}", folder);
+			if let Err(e) = fs::set_permissions(folder, fs::Permissions::from_mode(0o700)) {
+                	        eprintln!("Failed to set permissions for {}: {}", folder, e);
+                	} else {
+                		println!("Set permissions 700 for {}", folder);
+                	}                
+		}
+		Err(e) => eprintln!("Failed to create folder {}: {}", folder, e),
             }
         }
     }
