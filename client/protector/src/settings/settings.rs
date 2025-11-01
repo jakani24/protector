@@ -11,8 +11,8 @@ pub struct Settings {
 
 pub static SETTINGS: Lazy<RwLock<Settings>> = Lazy::new(|| {
     RwLock::new(Settings {
-        server_ip: String::new(),
-        server_port: 0,
+	server_ip: String::new(),
+	server_port: 0,
 	client_secret: String::new(),
 	server_secret: String::new(),
     })
@@ -50,7 +50,7 @@ pub fn load_settings(path: &str) -> bool {
                     Err(_) => return false, // invalid port number
                 }
             }
-            _ => continue, //return false, // unknown key
+            _ => continue,//ignore unknown key
         }
     }
 
